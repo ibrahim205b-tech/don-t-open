@@ -60,7 +60,7 @@ python3 -m http.server 8000
 ```bash
 npm i -D playwright && npx playwright install chromium   # once
 node tests/e2e.cjs                                          # local copy
-BASE_URL=https://<user>.github.io/dont-open/ node tests/e2e.cjs   # deployed copy
+BASE_URL=https://ibrahim205b-tech.github.io/don-t-open/ node tests/e2e.cjs   # deployed copy
 ```
 
 The suite plays every ending, finds every secret, and checks wrong-answer feedback, refresh

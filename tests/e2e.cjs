@@ -556,7 +556,9 @@ async function playthrough(page, base, opts) {
     const css = fs.readFileSync(path.join(ROOT, 'css/fonts.css'), 'utf8');
     refs.push(...[...css.matchAll(/url\(\.\.\/([^)]+)\)/g)].map((m) => m[1]));
     assert(refs.length > 8, 'found references');
-    for (const r of refs) {
+    for (const raw of refs) {
+      // Absolute self-references (og:image) are checked against the copy under test.
+      const r = raw.replace(/^https:\/\/ibrahim205b-tech\.github\.io\/don-t-open\//, '');
       const res = await fetch(new URL(r, base));
       assert(res.ok, `${r} → ${res.status}`);
     }

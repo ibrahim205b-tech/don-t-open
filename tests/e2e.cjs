@@ -29,6 +29,7 @@ function serve() {
 let passed = 0;
 const failures = [];
 async function test(name, fn) {
+  if (process.env.ONLY && !name.includes(process.env.ONLY)) return;
   const t0 = Date.now();
   try {
     await fn();
@@ -230,8 +231,16 @@ async function playthrough(page, base, opts) {
 
   for (const [label, viewport] of [['phone', { width: 360, height: 740 }], ['desktop', { width: 1366, height: 768 }]]) {
     await test(`intro credits on ${label}: content, timing, once per session, footer`, async () => {
-      const page = await newPage(browser, { intro: true, context: { viewport } });
-      const t0 = Date.now();
+      const page = await newPage(browser, { intro: true, context: { viewport }, init: () => {
+        // Record exactly when the intro enters and leaves the DOM.
+        window.__intro = {};
+        new MutationObserver((muts) => {
+          for (const m of muts) {
+            for (const n of m.addedNodes) if (n.classList?.contains('intro')) window.__intro.added = performance.now();
+            for (const n of m.removedNodes) if (n.classList?.contains('intro')) window.__intro.removed = performance.now();
+          }
+        }).observe(document, { childList: true, subtree: true });
+      } });
       await page.goto(base);
       await page.waitForSelector('.intro');
       const text = await page.textContent('.intro');
@@ -248,8 +257,10 @@ async function playthrough(page, base, opts) {
       assert(byPx >= 16, `name font size ${byPx}`);
       await page.screenshot({ path: path.join(process.env.ARTIFACT_DIR || require('os').tmpdir(), `intro-${label}.png`) });
       await page.waitForSelector('.intro', { state: 'detached', timeout: 4000 });
-      const took = Date.now() - t0;
-      assert(took <= 4800, `intro took ${took}ms`);
+      const { added, removed } = await page.evaluate(() => window.__intro);
+      const took = Math.round(removed - added);
+      assert(took <= 4100, `intro was on screen for ${took}ms`);
+      console.log(`      intro on screen for ${took}ms`);
       assert(!(await page.evaluate(() => document.getElementById('app').inert)), 'page interactive again');
       assert(await page.isVisible('.landing .btn--primary'), 'landing after intro');
       const foot = (await page.textContent('#siteFooter')).trim();

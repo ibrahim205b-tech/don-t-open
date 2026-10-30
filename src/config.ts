@@ -23,7 +23,8 @@ export function loadConfig(overrides: Partial<Config> = {}, env = process.env): 
     env: mode,
     host: env.HOST || '127.0.0.1',
     port: Number(env.PORT || 3000),
-    baseUrl: (env.BASE_URL || `http://localhost:${env.PORT || 3000}`).replace(/\/+$/, ''),
+    // على Render يُضبط RENDER_EXTERNAL_URL تلقائياً؛ BASE_URL (عند ربط نطاق خاص) له الأولوية
+    baseUrl: (env.BASE_URL || env.RENDER_EXTERNAL_URL || `http://localhost:${env.PORT || 3000}`).replace(/\/+$/, ''),
     sessionSecret: env.SESSION_SECRET || (prod ? '' : 'development-only-secret-not-for-production-use-000000'),
     databasePath: path.resolve(env.DATABASE_PATH || './data/dalil.db'),
     uploadDir: path.resolve(env.UPLOAD_DIR || './data/uploads'),

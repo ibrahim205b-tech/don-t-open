@@ -92,3 +92,23 @@ test('settings validation rejects markup and non-https links', () => {
   assert.deepEqual(cleanSetting('support_phone', '+9647763438000'), { value: '07763438000' });
   assert.ok('error' in cleanSetting('unknown_key', 'x'));
 });
+
+test('first super admin bootstrap is idempotent and validates input', async () => {
+  const { openDatabase } = await import('../src/db/index.ts');
+  const { bootstrapSuperAdmin } = await import('../src/domain/bootstrap.ts');
+  const db = openDatabase(':memory:');
+  assert.equal((await bootstrapSuperAdmin(db, { name: 'مدير', phone: '0771', password: 'strong-pass-123' }, 'test')).created, false);
+  assert.equal((await bootstrapSuperAdmin(db, { name: 'مدير', phone: '07711112222', password: 'short' }, 'test')).created, false);
+  assert.equal((await bootstrapSuperAdmin(db, { name: 'مدير', phone: '07711112222', password: 'strong-pass-123' }, 'test')).created, true);
+  assert.equal((await bootstrapSuperAdmin(db, { name: 'ثاني', phone: '07711113333', password: 'strong-pass-456' }, 'test')).created, false);
+  assert.equal(db.prepare("SELECT count(*) FROM users WHERE role = 'super_admin'").pluck().get(), 1);
+  assert.ok(!JSON.stringify(db.prepare('SELECT * FROM audit_logs').all()).includes('strong-pass'));
+  db.close();
+});
+
+test('base URL falls back to the Render-provided public URL', async () => {
+  const { loadConfig } = await import('../src/config.ts');
+  const env = { NODE_ENV: 'production', SESSION_SECRET: 'z'.repeat(48), RENDER_EXTERNAL_URL: 'https://dalil.onrender.com' };
+  assert.equal(loadConfig({}, env).baseUrl, 'https://dalil.onrender.com');
+  assert.equal(loadConfig({}, { ...env, BASE_URL: 'https://example.iq/' }).baseUrl, 'https://example.iq');
+});

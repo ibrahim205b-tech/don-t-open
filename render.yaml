@@ -1,0 +1,31 @@
+# نشر «دليل المعامل» على Render بنقرة واحدة (Blueprint).
+# مهم: الخطة المجانية لا تدعم الأقراص الدائمة، والبيانات تضيع مع كل نشر؛ لذلك الخطة starter.
+services:
+  - type: web
+    name: dalil-al-maamil
+    runtime: docker
+    plan: starter
+    region: frankfurt
+    branch: main
+    healthCheckPath: /healthz
+    autoDeploy: true
+    disk:
+      name: dalil-data
+      mountPath: /data
+      sizeGB: 1
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: TRUST_PROXY
+        value: "true"
+      - key: ADMIN_REQUIRE_MFA
+        value: "true"
+      - key: SESSION_SECRET
+        generateValue: true
+      # بيانات المدير الأول: تُطلب عند إنشاء الخدمة. احذف ADMIN_PASSWORD بعد أول دخول.
+      - key: ADMIN_NAME
+        sync: false
+      - key: ADMIN_PHONE
+        sync: false
+      - key: ADMIN_PASSWORD
+        sync: false

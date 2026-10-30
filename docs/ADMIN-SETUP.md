@@ -20,6 +20,10 @@ ADMIN_NAME="إبراهيم علي الشويلي" ADMIN_PHONE=07XXXXXXXXX npm ru
 docker exec -it dalil env ADMIN_NAME="..." ADMIN_PHONE=07XXXXXXXXX node scripts/create-admin.ts
 ```
 
+## على استضافة بلا طرفية (مثل Render)
+
+اضبط `ADMIN_NAME` و`ADMIN_PHONE` و`ADMIN_PASSWORD` في متغيرات البيئة. عند الإقلاع، إذا لم يوجد مدير عام، يُنشأ الحساب ويُسجَّل في سجل التدقيق (`via: env`). بعد أول دخول احذف `ADMIN_PASSWORD` من الإعدادات. وجود المتغيرات لاحقاً لا ينشئ مديراً ثانياً ولا يغيّر كلمة المرور.
+
 ## بعد أول دخول
 
 1. سجّل الدخول من `/login`.

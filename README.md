@@ -54,12 +54,12 @@ npm run dev                   # http://localhost:3000
 ADMIN_NAME="إبراهيم علي الشويلي" ADMIN_PHONE=07XXXXXXXXX npm run admin:create
 ```
 
-تُطلب كلمة المرور بشكل مخفي. الأمر آمن للتكرار ولا ينشئ مديراً ثانياً. التفاصيل والاستعادة في [docs/ADMIN-SETUP.md](docs/ADMIN-SETUP.md).
+تُطلب كلمة المرور بشكل مخفي. الأمر آمن للتكرار ولا ينشئ مديراً ثانياً. وعلى الاستضافات بلا طرفية: اضبط `ADMIN_NAME` و`ADMIN_PHONE` و`ADMIN_PASSWORD` فيُنشأ الحساب عند أول تشغيل، ثم احذف `ADMIN_PASSWORD`. التفاصيل والاستعادة في [docs/ADMIN-SETUP.md](docs/ADMIN-SETUP.md).
 
 ## الاختبارات
 
 ```bash
-npm run check        # فحص الأنواع + ESLint + ٣٨ اختبار وحدات وتكامل وأمن
+npm run check        # فحص الأنواع + ESLint + ٤٠ اختبار وحدات وتكامل وأمن
 npm run test:e2e     # ٣ اختبارات متصفح حقيقية (تحتاج: npx playwright install chromium)
 npm audit
 ```
@@ -68,7 +68,7 @@ npm audit
 
 ## النشر
 
-GitHub Pages لا يكفي لهذا المشروع (يحتاج خادماً وقاعدة بيانات). الخيارات الموصى بها وخطواتها في [docs/DEPLOYMENT.md](docs/DEPLOYMENT.md): خادم VPS صغير مع Docker وCaddy لشهادة HTTPS، أو خدمة تدعم الأقراص الدائمة. المستودع يحتوي `Dockerfile` جاهزاً وفحص CI على GitHub Actions.
+GitHub Pages لا يكفي لهذا المشروع (يحتاج خادماً وقاعدة بيانات). أسهل طريقة: Render عبر ملف `render.yaml` الجاهز (Blueprint)، والمدير الأول يُنشأ تلقائياً من متغيرات البيئة عند أول تشغيل. البديل: خادم VPS مع Docker وCaddy. الخطوات في [docs/DEPLOYMENT.md](docs/DEPLOYMENT.md).
 
 ## النسخ الاحتياطي
 

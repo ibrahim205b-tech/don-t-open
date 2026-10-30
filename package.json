@@ -1,0 +1,46 @@
+{
+  "name": "dalil-al-maamil",
+  "version": "1.0.0",
+  "private": true,
+  "description": "منصة دليل المعامل — دليل محلات وخدمات وإعلانات منطقة المعامل في بغداد",
+  "author": "إبراهيم علي الشويلي",
+  "license": "UNLICENSED",
+  "type": "module",
+  "engines": {
+    "node": ">=22.18"
+  },
+  "scripts": {
+    "start": "node src/server.ts",
+    "dev": "node --watch src/server.ts",
+    "typecheck": "tsc -p .",
+    "lint": "eslint .",
+    "test": "node --test --test-concurrency=1 tests/unit.test.ts tests/workflow.test.ts tests/security.test.ts",
+    "test:e2e": "node --test --test-concurrency=1 tests/e2e/*.test.ts",
+    "check": "npm run typecheck && npm run lint && npm test",
+    "admin:create": "node scripts/create-admin.ts",
+    "admin:reset-password": "node scripts/reset-password.ts",
+    "backup": "node scripts/backup.ts",
+    "seed:demo": "node scripts/seed-demo.ts"
+  },
+  "dependencies": {
+    "@fastify/compress": "^9.3.0",
+    "@fastify/cookie": "^11.1.5",
+    "@fastify/formbody": "^9.0.1",
+    "@fastify/multipart": "^10.1.6",
+    "@fastify/rate-limit": "^11.2.1",
+    "@fastify/static": "^10.1.8",
+    "better-sqlite3": "^13.0.3",
+    "fastify": "^5.12.7",
+    "sharp": "^0.35.5",
+    "zod": "^4.6.7"
+  },
+  "devDependencies": {
+    "@eslint/js": "^10.0.1",
+    "@types/better-sqlite3": "^9.6.0",
+    "@types/node": "^22.20.5",
+    "eslint": "^10.13.0",
+    "playwright": "^1.63.0",
+    "typescript": "^6.0.3",
+    "typescript-eslint": "^8.72.1"
+  }
+}

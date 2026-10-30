@@ -1,88 +1,96 @@
-# لا تفتح — DON'T OPEN
+# دليل المعامل
 
-> بعض الأبواب من الأفضل أن تبقى مغلقة.
-> *Some doors are better left closed.*
+منصة عربية لأهالي منطقة المعامل في بغداد: دليل المحلات والأسواق، المطاعم وقوائم الطعام، الوظائف، العقارات، الخدمات والمهن، سوق البيع والشراء، العروض، أخبار ومبادرات المنطقة، وطلبات المساعدة المجتمعية. كل منشور يمر بمراجعة الإدارة قبل ظهوره للعامة.
 
-An interactive Arabic (Iraqi dialect) psychological-mystery experience, with an English option.
-Seven stages, seven hidden secrets, four endings, shareable results. It is a static site with
-no build step, no backend, no trackers and no third-party requests.
+**جميع الحقوق محفوظة © إبراهيم علي الشويلي** · رقم الدعم: 07763438000
 
-Created and developed by **Ibrahim Ali — إبراهيم علي**. © 2026 Ibrahim Ali — DON'T OPEN.
+> منصة دليل المعامل مشروع أُنشئ وطُوّر بواسطة إبراهيم علي الشويلي. جميع الحقوق محفوظة وفقاً للقوانين المعمول بها.
 
-## Credits & intro
+---
 
-Ownership details live in one place: `js/credits.js` (name in Arabic/English, year, intro lines).
-They feed the opening credits (`js/intro.js`: under 4 s, skippable, shown once per browser session
-via `sessionStorage`, static under reduced motion), the site footer, the result card and the page
-`author` meta tag (the meta tag and the footer's no-JS fallback in `index.html` repeat the text).
+## التقنيات
 
-## What's inside
+| الجزء | الاختيار | السبب |
+| --- | --- | --- |
+| التشغيل | Node.js 22.18+ (يشغّل TypeScript مباشرة) | بلا خطوة بناء، وفحص الأنواع بـ `tsc` |
+| الخادم | Fastify 5 | سريع، حدود للطلبات، Rate limiting، multipart |
+| الواجهة | صفحات تُبنى على الخادم (HTML + CSS + ملف JS صغير ٣ ك.ب) | سريعة جداً على الإنترنت الضعيف، وتعمل بلا JavaScript |
+| قاعدة البيانات | SQLite عبر better-sqlite3 (WAL) + FTS5 للبحث العربي | قاعدة حقيقية بمعاملات وقيود ومشغّلات، وتكلفة استضافة منخفضة |
+| الصور | sharp: إعادة ترميز كل صورة إلى WebP وحذف بيانات EXIF | يُبطل الملفات المدسوسة ويحمي الخصوصية |
+| التحقق | zod (مخطط صارم لكل نوع منشور) | رفض أي حقل غير متوقع |
+| كلمات المرور | scrypt من مكتبة Node المدمجة | خوارزمية معتمدة، بلا تبعية إضافية |
+| الخطوط | IBM Plex Sans Arabic وNoto Kufi Arabic (مستضافة محلياً، رخصة OFL) | بلا طلبات لجهات خارجية |
+| الاختبارات | node:test + Playwright + Lighthouse | |
 
-| Feature | Where |
-| --- | --- |
-| Landing page, chapters, secrets & endings collection, privacy notice | `js/app.js` |
-| Chapter 1 "الشقة رقم ٧ / Apartment 7": 7 stages, 7 secrets, 4 endings | `js/chapters/chapter1.js` |
-| Chapter registry (chapters 2–3 shown as "coming soon") | `js/chapters/index.js` |
-| Arabic/English strings, answer normalisation | `js/i18n.js` |
-| Validated `localStorage` persistence (survives corruption / blocked storage) | `js/storage.js` |
-| Optional synthesised ambient sound (Web Audio, off by default) | `js/audio.js` |
-| Challenge links, Web Share + clipboard fallback, PNG result card (canvas) | `js/share.js` |
-| Styles, reduced-motion support | `css/style.css` |
-| Self-hosted fonts (Noto Kufi Arabic, IBM Plex Sans Arabic — SIL OFL) | `fonts/`, `css/fonts.css` |
-| End-to-end tests (Playwright) | `tests/e2e.cjs` |
-| Open Graph image + icon generator | `tools/` |
+## الأقسام والميزات المنجزة
 
-### The story in brief (spoilers)
+- الصفحة الرئيسية: البحث «شنو تحتاج بالمعامل؟»، الأقسام مع عدد المنشورات، المميز، أحدث الإعلانات، العروض، الوظائف، المطاعم، الخدمات، العقارات، البيع والشراء، الأخبار، المساعدات، زر «أضف إعلانك»، تعريف بالمنصة، الدعم، تذييل بالحقوق والروابط القانونية.
+- صفحة مستقلة لكل منشور مع روابط اتصال وواتساب حقيقية، وصور، وحقائق منظمة حسب النوع.
+- دليل المحلات: ساعات العمل، العنوان، الموقع على الخريطة (اختياري)، الخدمات، قائمة الأسعار/الطعام، العروض المرتبطة، حالة «مفتوح/مغلق/غير محدد»، شارة توثيق يمنحها المدير يدوياً فقط، ونظام مطالبة بالملكية تراجعه الإدارة.
+- الوظائف (الراتب أو «يحدد عند التواصل»، نوع الدوام، الشروط، تاريخ الانتهاء)، العقارات (من دون العنوان الدقيق)، الخدمات والمهن مع تقييمات مضبوطة، سوق البيع والشراء مع فلاتر السعر والمنطقة والتاريخ، العروض، الأخبار (فصل واضح بين «خبر مؤكد من الإدارة» و«منشور من مستخدم»)، المساعدات المجتمعية (موافقة صريحة على النشر وعلى إظهار الرقم، بلا رفع وثائق، زر «انتهت الحاجة»).
+- البحث العربي: يتجاهل التشكيل والهمزات والسوابق (ال/لل/بال)، مع فلاتر لكل قسم وترقيم صفحات.
+- حالات المنشور: مسودة، بانتظار المراجعة، مطلوب تعديل، مرفوض، منشور، مخفي، منتهي، محذوف. الانتقالات مفروضة في الخادم وفي قاعدة البيانات (مشغّلات SQL).
+- لوحة إدارة على `/admin`: المؤشرات، طابور المراجعة مع البحث والتصفية بالتاريخ، صفحة مراجعة كاملة (الصور، صاحب المنشور، سجل الحالات، سجل التعديلات، البلاغات)، التقييمات، البلاغات، طلبات الملكية، المستخدمون والأدوار، التصنيفات والمناطق، الإعلانات المميزة، إعدادات الموقع، سجل التدقيق.
+- إشعارات داخل الموقع (قبول، رفض، طلب تعديل، إخفاء، انتهاء، اعتماد الملكية).
+- SEO: عناوين ووصف، Canonical، Open Graph، `sitemap.xml` للمنشور فقط، `robots.txt`، بيانات LocalBusiness المنظمة من البيانات الحقيقية فقط (بلا تقييمات)، ومنع فهرسة الإدارة والحسابات.
 
-1. **الباب / The Door**: find the key (bulb → frame). Peephole = secret *eye*.
-2. **الرسالة / The Message**: acrostic letter; the answer is **سرداب / cellar**. Holding the letter to the bulb = secret *watermark* (reveals the name **سِدرة / Sidra**).
-3. **الاختيار / The Choice**: sign, tear or ignore the visitors' book; this shapes later scenes and endings. Line 9 = secret *date*; the side door = secret *room*.
-4. **النمط / The Pattern**: 3×3 "lights-out" candle puzzle (always solvable; hints mark the next correct move). The broken candle after solving = secret *candle* (also reveals Sidra).
-5. **الصمت / The Silence**: don't touch anything for 12 s, then notice that the clock runs backwards. Waiting 15 s more = secret *patience*.
-6. **السر / The Secret**: dials: 3:17 in a mirror = **713**. Entering **014** = secret *number*.
-7. **القرار الأخير / The Final Decision**:
-   - Stay → **المراقب / The Observer**
-   - Leave → **الناجي / The Escaped**, *unless* you signed the book → **The Observer** (bound variant)
-   - Open the red door → **الباب الأخير / The Last Door**
-   - Call the door "Sidra" (only offered once you know the name) → **المجهول / The Unknown**
-
-## Run locally
-
-Any static server works (ES modules need `http://`, not `file://`):
+## التشغيل محلياً
 
 ```bash
-python3 -m http.server 8000
-# open http://localhost:8000/
+npm ci
+cp .env.example .env          # ثم عدّل القيم (للتطوير: NODE_ENV=development)
+npm run dev                   # http://localhost:3000
 ```
 
-## Tests
+في بيئة التطوير يمكن إضافة بيانات تجريبية **موسومة بـ «[تجريبي]»**: `npm run seed:demo` (يرفض العمل في الإنتاج).
+
+### قاعدة البيانات
+
+تُنشأ تلقائياً عند أول تشغيل في `DATABASE_PATH`، وتُطبَّق ملفات الترحيل في `src/db/migrations` بالترتيب داخل معاملات (جدول `schema_migrations`). التفاصيل في [docs/DATABASE.md](docs/DATABASE.md).
+
+### حساب الإدارة الأول
 
 ```bash
-npm i -D playwright && npx playwright install chromium   # once
-node tests/e2e.cjs                                          # local copy
-BASE_URL=https://ibrahim205b-tech.github.io/don-t-open/ node tests/e2e.cjs   # deployed copy
+ADMIN_NAME="إبراهيم علي الشويلي" ADMIN_PHONE=07XXXXXXXXX npm run admin:create
 ```
 
-The suite plays every ending, finds every secret, and checks wrong-answer feedback, refresh
-persistence, reset, Web Share / clipboard / card download, challenge links, corrupted and blocked
-`localStorage`, keyboard play, 320 px layouts and asset links.
+تُطلب كلمة المرور بشكل مخفي. الأمر آمن للتكرار ولا ينشئ مديراً ثانياً. التفاصيل والاستعادة في [docs/ADMIN-SETUP.md](docs/ADMIN-SETUP.md).
 
-## Adding a chapter
-
-1. Copy the shape of `js/chapters/chapter1.js` into `chapter2.js` (`stages`, `secrets`, `clues`,
-   `endings`, `resolve`, `reasonLines`). Use globally unique secret/ending ids.
-2. In `js/chapters/index.js`, import it and replace the `comingSoon(2, …)` placeholder.
-
-Stored progress is validated against the registry, so old saves keep working.
-
-## Privacy
-
-Everything is stored in the visitor's own `localStorage`. Sharing sends only the site URL, an
-ending id and a secret count, and only when the visitor presses a share button. Challenge links are
-created on the visitor's device and are **not** server-verified.
-
-## Regenerating the social image / icons
+## الاختبارات
 
 ```bash
-node tools/render-assets.cjs   # needs playwright
+npm run check        # فحص الأنواع + ESLint + ٣٨ اختبار وحدات وتكامل وأمن
+npm run test:e2e     # ٣ اختبارات متصفح حقيقية (تحتاج: npx playwright install chromium)
+npm audit
 ```
+
+النتائج وما بقي للمراجعة: [docs/SECURITY-TESTS.md](docs/SECURITY-TESTS.md).
+
+## النشر
+
+GitHub Pages لا يكفي لهذا المشروع (يحتاج خادماً وقاعدة بيانات). الخيارات الموصى بها وخطواتها في [docs/DEPLOYMENT.md](docs/DEPLOYMENT.md): خادم VPS صغير مع Docker وCaddy لشهادة HTTPS، أو خدمة تدعم الأقراص الدائمة. المستودع يحتوي `Dockerfile` جاهزاً وفحص CI على GitHub Actions.
+
+## النسخ الاحتياطي
+
+`npm run backup` ينشئ نسخة متسقة من قاعدة البيانات والصور ويتحقق من سلامتها. خطة الاستعادة في [docs/BACKUP.md](docs/BACKUP.md).
+
+## ملفات التوثيق
+
+- [SECURITY.md](SECURITY.md): الضوابط الأمنية والإبلاغ عن الثغرات
+- [docs/ADMIN-SETUP.md](docs/ADMIN-SETUP.md): المدير الأول والاستعادة
+- [docs/DEPLOYMENT.md](docs/DEPLOYMENT.md): النشر
+- [docs/BACKUP.md](docs/BACKUP.md): النسخ الاحتياطي والاستعادة
+- [docs/SECURITY-TESTS.md](docs/SECURITY-TESTS.md): نتائج الاختبارات
+- [docs/CONTENT-POLICY.md](docs/CONTENT-POLICY.md): دليل المشرفين وسياسات المحتوى
+- [docs/DATABASE.md](docs/DATABASE.md): مخطط قاعدة البيانات
+- [docs/DESIGN.md](docs/DESIGN.md): قرارات التصميم
+
+## القيود المعروفة
+
+- لا يوجد بريد إلكتروني أو SMS مهيأ: الإشعارات داخل الموقع فقط، واستعادة كلمة المرور تتم عبر الدعم (المدير يولّد كلمة مرور مؤقتة) أو عبر سكربت الخادم.
+- أرقام الهواتف غير موثقة بـ SMS عند التسجيل.
+- لا يوجد دفع إلكتروني: الإعلانات المميزة تُدار يدوياً، والبنية جاهزة لإضافة الدفع لاحقاً.
+- لا توجد محادثات خاصة بين المستخدمين (مقصود، لأسباب أمنية وخصوصية).
+- رفع شعار الموقع من لوحة الإدارة غير متاح؛ الشعار ملف SVG في `public/img/logo.svg`.
+- لا يوجد CAPTCHA؛ الحماية من الإزعاج عبر الحسابات والحدود اليومية وحدود المعدل والمراجعة اليدوية.
+- SQLite مناسبة لموقع محلي بهذا الحجم على خادم واحد؛ للتوسع لعدة خوادم يلزم الانتقال إلى PostgreSQL.
